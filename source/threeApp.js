@@ -1,3 +1,8 @@
+import * as THREE from 'three';
+import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
+import img from '../static/img.png';
+import vertexGlsl from './shader/vertex.glsl'
+import fragmentGlsl from './shader/fragment.glsl'
 
 class App{
     constructor(){
@@ -70,6 +75,4 @@ class App{
     }
 }
 
-window.addEventListener('load',()=>{
-    const app = new App()
-})
+export {App as default};
