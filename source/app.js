@@ -1,13 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
-import img from '../static/img.png';
-import vertexGlsl from './shader/vertex.glsl'
-import fragmentGlsl from './shader/fragment.glsl'
+
 
 class App{
-    constructor(){
+    constructor(scene,data){
         this.initialize()
         this.render()
+        this.createObject(scene,data)
         window.addEventListener('resize', () => {
             this.resize()
         })
@@ -28,30 +27,19 @@ class App{
             100
         )
         this.camera.position.z = 3
-
-
-        
-
-        // create model
-        this.cube = new THREE.Mesh(
-            new THREE.BoxGeometry(1,1,1),
-            new THREE.ShaderMaterial({
-                vertexShader: vertexGlsl,
-                fragmentShader: fragmentGlsl,
-                uniforms:{
-                    
-                }
-            })
-        )
-
-        // add to the scene
-        this.scene.add(this.cube)
         this.scene.add(this.camera)
 
         // orbit control
         this.control = new OrbitControls(this.camera, this.renderer.domElement)
         this.control.enableDamping = true
     }
+
+    // create model
+    createObject(callback, data){
+        // add to the scene
+        this.scene.add(callback(data))
+    }   
+
     // update animation
     update(){
         this.control.autoRotate = true
@@ -75,4 +63,5 @@ class App{
     }
 }
 
-export {App as default};
+
+export {App as default}

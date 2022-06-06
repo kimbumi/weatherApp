@@ -18,3 +18,10 @@ canvas {
     height: 100%;
     background-color: black;
   }
+
+/*weather*/
+.weatherDisplay{
+    position: absolute;
+    z-index: 1000;
+    color:white;
+}
