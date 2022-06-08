@@ -25,7 +25,7 @@ function createDOM(data){
     $weatherDisplay.appendChild($temp)
 }
 
-const load = (function(){
+window.addEventListener('load', function(){
     fetch('https://api.openweathermap.org/data/2.5/weather?q=seoul&appid=4fee3a6f62b269677bdf61ab19a03fa8&units=metric')
         .then(response => response.json())
         .catch(err => alert(err))
@@ -34,4 +34,4 @@ const load = (function(){
             const codeId = data.weather[0].id
             new App(scene,codeId)
         })
-})()
+})

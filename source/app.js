@@ -26,7 +26,7 @@ class App{
             0.1,
             100
         )
-        this.camera.position.z = 3
+        this.camera.position.set(0,3,4)
         this.scene.add(this.camera)
 
         // orbit control
@@ -42,7 +42,7 @@ class App{
 
     // update animation
     update(){
-        this.control.autoRotate = true
+        this.control.autoRotate = false
         this.control.update()
     }
     // render and update every frames
