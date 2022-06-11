@@ -9,53 +9,60 @@ import fragmentGlsl from './shader/fragment.glsl'
 function scene(data){
     const scene = new THREE.Group()
     const material = new THREE.MeshStandardMaterial({
-        wireframe: true
+        wireframe: false
     })
     const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 )
 
     //create random buildigns
-    const coordinateArr = []
+    const coordinateObj = {}
     const buildingSide = 2
-    const buildingNum = 2
-    const planeWidth = 10
-    const planeHeight = 10
+    const buildingNum = 200
+    const planeWidth = 50
+    const planeHeight = 50
 
     const plane = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(planeWidth,1,planeHeight,planeWidth,1,planeHeight),
+        new THREE.BoxBufferGeometry(planeWidth,1,planeHeight),
         material
     )
 
-    // create vector2 coordinate map
-    for(let x = -planeWidth/2; x < planeWidth/2; x++){
-        for(let y = -planeHeight/2; y < planeHeight/2; y++){
-            coordinateArr.push([x,y])
+    //create vec2 coordinate object
+    for(let x = -planeWidth/2 + buildingSide/2; x < planeWidth/2 - buildingSide/2; x++){
+        for(let y = -planeHeight/2 + buildingSide/2; y < planeHeight/2 - buildingSide/2; y++){
+            coordinateObj[`${x},${y}`] = false
         }
     }
-    console.log(coordinateArr)
 
-    // pick random coordinate and locate building
-    const createRandomBuilding = (num) => {
+    //func to create building and locate 
+    const locateBuilding = (buildingNum) =>{
         const buildingArr = []
-        const buildingZ = 4
-        if(!coordinateArr.length){
-            return;
-        }
-        for(let n = 0; n < num; n++){
-            const random = Math.floor(Math.random() * coordinateArr.length)
-            const building =  new THREE.Mesh(
-                 new THREE.BoxGeometry(buildingSide,buildingZ,buildingSide),
+        for(let i = 0; i < buildingNum; i++){
+            const buildingZ = 4 + Math.random()* 10
+            const mesh = new THREE.Mesh(
+                new THREE.BoxBufferGeometry(buildingSide,buildingZ,buildingSide),
                 material
             )
-            const coorX = coordinateArr[random][0]
-            const coorY = coordinateArr[random][1]
-            building.position.set(coorX/2,buildingZ/2,coorY/2)
-            buildingArr.push(building)
-            console.log(building.position)
+            const random = Math.floor(Math.random()* Object.keys(coordinateObj).length)
+            const coordStr = Object.keys(coordinateObj)[random]
+            const x = parseInt(coordStr.split(',')[0])
+            const y = parseInt(coordStr.split(',')[1])
+            if(!coordinateObj[coordStr]){
+                mesh.position.set(x,buildingZ/2,y)
+                buildingArr.push(mesh)
+            }
+            
+            //deal with the overlapping
+            coordinateObj[coordStr] = true
+            const offset = 3
+            for(let coordX = x - buildingSide/2 - offset; coordX < x + buildingSide/2 + offset; coordX++){
+                for(let coordY = y - buildingSide/2 - offset; coordY < y + buildingSide/2 + offset; coordY++){
+                    coordinateObj[`${coordX},${coordY}`] = true
+                }
+            }
+            
         }
-        return buildingArr
+        scene.add(...buildingArr)
     }
-    // const result = createRandomBuilding(buildingNum)
-    // console.log(result)
+    locateBuilding(buildingNum)
 
     // const cube = new THREE.Mesh(
     //     new THREE.BoxGeometry(1,1,1),
@@ -66,9 +73,9 @@ function scene(data){
     //         }
     //     })
     // )
+
     scene.add(light)
     scene.add(plane)
-    // scene.add(...result)
     return scene
 }
 

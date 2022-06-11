@@ -30,7 +30,7 @@ window.addEventListener('load', function(){
         .then(response => response.json())
         .catch(err => alert(err))
         .then(data => {
-            createDOM(data)
+            // createDOM(data)
             const codeId = data.weather[0].id
             new App(scene,codeId)
         })
