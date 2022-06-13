@@ -18,15 +18,17 @@ class App{
 
         // create scene
         this.scene = new THREE.Scene();
+         this.scene.fog = new THREE.FogExp2(0xcce0e8, 0.015)
+         this.scene.background = new THREE.Color( 0xcce0e8 );
 
         // create camera
         this.camera = new THREE.PerspectiveCamera(
-            75,
+            20,
             window.innerWidth/window.innerHeight,
             0.1,
-            100
+            200
         )
-        this.camera.position.set(0,3,4)
+        this.camera.position.set(0,0,100)
         this.scene.add(this.camera)
 
         // orbit control
@@ -51,6 +53,9 @@ class App{
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
         this.renderer.render(this.scene,this.camera)
+        this.renderer.shadowMap.type = THREE.PCFShadowMap
+        this.renderer.shadowMap.enabled = true
+        this.renderer.shadowMap.needsUpdate = true;
         requestAnimationFrame(()=>{
             this.render()
         })
